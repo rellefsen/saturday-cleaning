@@ -1,0 +1,7 @@
+{
+  "name": "saturday-cleaning",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  }
+}

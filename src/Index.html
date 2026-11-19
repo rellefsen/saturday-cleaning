@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Saturday cleaning signup</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --text: #1a1a1a;
+      --muted: #444;
+      --bg: #fff;
+      --surface: #f6f5f2;
+      --border: #767676;
+      --accent: #0b57d0;
+      --button-text: #fff;
+      --error: #b3261e;
+      --error-bg: #fce8e6;
+      --ok: #0d652d;
+      --focus: #0b57d0;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --text: #f3f3f3;
+        --muted: #c4c7c5;
+        --bg: #1f1f1f;
+        --surface: #2a2a2a;
+        --border: #9aa0a6;
+        --accent: #a8c7fa;
+        --button-text: #062e6f;
+        --error: #f2b8b5;
+        --error-bg: #3c1f1e;
+        --ok: #81c995;
+        --focus: #a8c7fa;
+      }
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 0.75rem;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+
+    main {
+      max-width: 36rem;
+      margin: 0 auto;
+    }
+
+    h1, h2 {
+      font-size: 1.5rem;
+      line-height: 1.3;
+      margin: 0 0 0.5rem;
+    }
+
+    p { margin: 0 0 1rem; }
+
+    .lede { color: var(--muted); }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.25rem;
+      margin-block-end: 1.25rem;
+    }
+
+    label, legend {
+      font-weight: 650;
+      padding-block: 0.15rem;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 0.875rem;
+    }
+
+    input, select, button {
+      font: inherit;
+      font-size: max(1rem, 1em);
+      min-height: 48px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 0.65rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    input:focus-visible, select:focus-visible, button:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 2px;
+    }
+
+    :is(input, select):user-invalid {
+      border-color: var(--error);
+      background: var(--error-bg);
+    }
+
+    .error-msg {
+      display: none;
+      color: var(--error);
+      font-size: 0.875rem;
+    }
+
+    .field:has(:user-invalid) > .error-msg {
+      display: block;
+    }
+
+    fieldset {
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      margin: 0 0 1.25rem;
+      padding: 0.5rem 0.75rem 0.75rem;
+    }
+
+    .choice {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      min-height: 48px;
+    }
+
+    .choice input {
+      width: 1.25rem;
+      height: 1.25rem;
+      min-height: 0;
+      accent-color: var(--accent);
+    }
+
+    button[type="submit"], button.secondary {
+      border-radius: 4px;
+      padding: 0.75rem 1.25rem;
+      cursor: pointer;
+    }
+
+    button[type="submit"] {
+      border: 0;
+      background: var(--accent);
+      color: var(--button-text);
+      font-weight: 650;
+    }
+
+    button[type="submit"]:disabled {
+      opacity: 0.7;
+      cursor: progress;
+    }
+
+    button.secondary {
+      margin-top: 0.5rem;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .banner {
+      padding: 0.75rem;
+      border-radius: 4px;
+      background: var(--surface);
+      margin-block-end: 1rem;
+    }
+
+    .banner.error {
+      background: var(--error-bg);
+      color: var(--error);
+    }
+
+    #done h2 { color: var(--ok); }
+
+    .visually-hidden:where(:not(:focus-within, :active)) {
+      position: absolute !important;
+      clip-path: inset(50%) !important;
+      overflow: hidden !important;
+      width: 1px !important;
+      height: 1px !important;
+      margin: -1px !important;
+      padding: 0 !important;
+      border: 0 !important;
+      white-space: nowrap !important;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1 id="title">Saturday cleaning</h1>
+    <p class="lede">Saturday morning cleaning. Supplies are at the building. Four families can sign up for each Saturday. A reminder goes out on Friday.</p>
+
+    <p id="empty" class="banner" hidden>No Saturdays are open right now.</p>
+    <p id="full-list" class="hint"></p>
+
+    <div id="form-error" class="banner error" role="alert" hidden></div>
+
+    <form id="signup" method="post" action="#" aria-labelledby="title">
+      <div class="visually-hidden" aria-hidden="true">
+        <label for="fax_number">Fax</label>
+        <input id="fax_number" name="fax_number" type="text" tabindex="-1" autocomplete="off">
+      </div>
+
+      <div class="field">
+        <label for="saturday">Saturday <span aria-hidden="true">*</span></label>
+        <span id="saturday-hint" class="hint">Choose a morning that still has room.</span>
+        <select id="saturday" name="saturday" required autocomplete="off" aria-describedby="saturday-hint" data-error="saturday-error">
+          <option value="">Choose a Saturday</option>
+        </select>
+        <p id="saturday-detail" class="hint"></p>
+        <div id="saturday-error" class="error-msg">Error: Choose a Saturday.</div>
+      </div>
+
+      <div class="field">
+        <label for="family-name">Family name <span aria-hidden="true">*</span></label>
+        <input id="family-name" name="familyName" type="text" required maxlength="80" autocomplete="organization" enterkeyhint="next" data-error="family-error">
+        <div id="family-error" class="error-msg">Error: Enter the family name.</div>
+      </div>
+
+      <div class="field">
+        <label for="contact-name">Contact name <span aria-hidden="true">*</span></label>
+        <span id="contact-hint" class="hint">The person the Friday reminder should name.</span>
+        <input id="contact-name" name="contactName" type="text" required maxlength="80" autocomplete="name" enterkeyhint="next" aria-describedby="contact-hint" data-error="contact-error">
+        <div id="contact-error" class="error-msg">Error: Enter the contact name.</div>
+      </div>
+
+      <fieldset>
+        <legend>Friday reminder <span aria-hidden="true">*</span></legend>
+        <p id="remind-hint" class="hint">Choose email, text, or both. Add the address or number that matches.</p>
+        <div class="choice">
+          <input id="remind-email" type="radio" name="remindBy" value="Email" checked>
+          <label for="remind-email">Email</label>
+        </div>
+        <div class="choice">
+          <input id="remind-text" type="radio" name="remindBy" value="Text">
+          <label for="remind-text">Text</label>
+        </div>
+        <div class="choice">
+          <input id="remind-both" type="radio" name="remindBy" value="Both">
+          <label for="remind-both">Email and text</label>
+        </div>
+      </fieldset>
+
+      <div class="field" id="email-field">
+        <label for="email">Email</label>
+        <span id="email-hint" class="hint">Format: you@example.com</span>
+        <input id="email" name="email" type="email" maxlength="254" autocomplete="email" spellcheck="false" autocapitalize="none" enterkeyhint="done" aria-describedby="email-hint" data-error="email-error">
+        <div id="email-error" class="error-msg">Error: Enter an email address in the format you@example.com.</div>
+      </div>
+
+      <div class="field" id="phone-field" hidden>
+        <label for="phone">Phone</label>
+        <span id="phone-hint" class="hint">Include the area code, such as 801-555-0100.</span>
+        <input id="phone" name="phone" type="tel" maxlength="20" autocomplete="tel" inputmode="tel" pattern="\+?[0-9 .()\-]{10,20}" enterkeyhint="done" aria-describedby="phone-hint" data-error="phone-error">
+        <div id="phone-error" class="error-msg">Error: Enter a phone number with an area code, such as 801-555-0100.</div>
+      </div>
+
+      <p id="texting-note" class="hint" hidden>Text reminders start after texting is turned on. Add an email if you want the Friday reminder before then.</p>
+
+      <button type="submit">Sign up</button>
+    </form>
+
+    <section id="done" hidden>
+      <h2 id="done-title" tabindex="-1">You’re signed up</h2>
+      <p id="done-text"></p>
+      <button type="button" class="secondary" id="another">Sign up another family</button>
+    </section>
+  </main>
+
+  <script id="page-data" type="application/json"><?!= pageData ?></script>
+  <script>
+    (function () {
+      var linkError = function (el, shown) {
+        var errorId = el.dataset.error;
+        if (!errorId) return;
+        var ids = (el.getAttribute('aria-describedby') || '').split(/\s+/).filter(function (id) {
+          return id && id !== errorId;
+        });
+        if (shown) ids.push(errorId);
+        if (ids.length) el.setAttribute('aria-describedby', ids.join(' '));
+        else el.removeAttribute('aria-describedby');
+      };
+
+      var announcer = document.createElement('div');
+      announcer.setAttribute('aria-live', 'polite');
+      announcer.className = 'visually-hidden';
+      document.body.appendChild(announcer);
+      var announceTimer;
+      var announcedField;
+      var flagged = new WeakSet();
+      var announced = new WeakSet();
+
+      var spokenText = function (node) {
+        var copy = node.cloneNode(true);
+        copy.querySelectorAll('[aria-hidden="true"]').forEach(function (n) { n.remove(); });
+        copy.querySelectorAll('[role="img"][aria-label]').forEach(function (n) {
+          n.replaceWith(n.getAttribute('aria-label') + ': ');
+        });
+        return copy.textContent.replace(/\s+/g, ' ').trim();
+      };
+
+      var announceError = function (el) {
+        var error = document.getElementById(el.dataset.error);
+        if (!error) return;
+        var label = el.labels && el.labels[0] ? spokenText(el.labels[0]) + ': ' : '';
+        clearTimeout(announceTimer);
+        announcer.textContent = '';
+        announcedField = el;
+        announceTimer = setTimeout(function () {
+          announcer.textContent = label + spokenText(error);
+        }, 500);
+      };
+
+      var syncAria = function (el, announce) {
+        if (!el.matches || !el.matches('input, select, textarea')) return;
+        var invalid = el.matches(':user-invalid');
+        if (invalid) {
+          if (announce && !announced.has(el)) {
+            announceError(el);
+            announced.add(el);
+          }
+          el.setAttribute('aria-invalid', 'true');
+          linkError(el, true);
+          flagged.add(el);
+        } else if (flagged.has(el) || el.getAttribute('aria-invalid') !== 'true') {
+          el.setAttribute('aria-invalid', 'false');
+          linkError(el, false);
+          flagged.delete(el);
+          announced.delete(el);
+          if (announcedField === el) {
+            clearTimeout(announceTimer);
+            announcer.textContent = '';
+          }
+        }
+      };
+
+      document.querySelectorAll('input, select, textarea').forEach(function (el) { syncAria(el); });
+      document.addEventListener('blur', function (event) { syncAria(event.target, true); }, true);
+      document.addEventListener('input', function (event) {
+        if (event.target.hasAttribute && event.target.hasAttribute('aria-invalid')) syncAria(event.target);
+      });
+      document.addEventListener('change', function (event) { syncAria(event.target, true); }, true);
+      document.addEventListener('invalid', function (event) {
+        announced.add(event.target);
+        syncAria(event.target);
+      }, true);
+      document.addEventListener('reset', function (event) {
+        setTimeout(function () {
+          Array.prototype.forEach.call(event.target.elements, function (el) { syncAria(el); });
+        });
+      }, true);
+
+      var form = document.getElementById('signup');
+      var select = document.getElementById('saturday');
+      var detail = document.getElementById('saturday-detail');
+      var empty = document.getElementById('empty');
+      var fullList = document.getElementById('full-list');
+      var formError = document.getElementById('form-error');
+      var done = document.getElementById('done');
+      var doneTitle = document.getElementById('done-title');
+      var doneText = document.getElementById('done-text');
+      var emailField = document.getElementById('email-field');
+      var phoneField = document.getElementById('phone-field');
+      var email = document.getElementById('email');
+      var phone = document.getElementById('phone');
+      var textingNote = document.getElementById('texting-note');
+      var submitButton = form.querySelector('button[type="submit"]');
+      var page = { textingEnabled: false, saturdays: [] };
+
+      var setMessage = function (input, message) {
+        input.addEventListener('invalid', function () {
+          input.setCustomValidity(message);
+        });
+        input.addEventListener('input', function () {
+          input.setCustomValidity('');
+        });
+      };
+      setMessage(select, 'Error: Choose a Saturday.');
+      select.addEventListener('change', function () { select.setCustomValidity(''); });
+      setMessage(document.getElementById('family-name'), 'Error: Enter the family name.');
+      setMessage(document.getElementById('contact-name'), 'Error: Enter the contact name.');
+      setMessage(email, 'Error: Enter an email address in the format you@example.com.');
+      setMessage(phone, 'Error: Enter a phone number with an area code, such as 801-555-0100.');
+
+      function loadPage() {
+        page = JSON.parse(document.getElementById('page-data').textContent);
+        var open = page.saturdays.filter(function (item) { return !item.full; });
+        var full = page.saturdays.filter(function (item) { return item.full; });
+        select.replaceChildren();
+        var placeholder = document.createElement('option');
+        placeholder.value = '';
+        placeholder.textContent = open.length ? 'Choose a Saturday' : 'No Saturday is open';
+        select.appendChild(placeholder);
+        open.forEach(function (item) {
+          var option = document.createElement('option');
+          option.value = item.date;
+          option.textContent = item.optionLabel;
+          option.dataset.notes = item.notes || '';
+          select.appendChild(option);
+        });
+        fullList.textContent = full.length
+          ? 'Full: ' + full.map(function (item) { return item.shortLabel; }).join(', ')
+          : '';
+        var noneOpen = open.length === 0;
+        form.hidden = noneOpen;
+        empty.hidden = !noneOpen;
+        if (noneOpen) {
+          empty.textContent = full.length
+            ? 'Every upcoming Saturday already has four families.'
+            : 'No Saturdays are open right now.';
+        }
+        detail.textContent = '';
+        textingNote.hidden = page.textingEnabled;
+        updateReminderFields();
+      }
+
+      function selectedNotes() {
+        var option = select.selectedOptions && select.selectedOptions[0];
+        detail.textContent = option && option.dataset.notes ? option.dataset.notes : '';
+      }
+
+      function updateReminderFields() {
+        var selected = form.querySelector('input[name="remindBy"]:checked');
+        var choice = selected ? selected.value : 'Email';
+        var wantEmail = choice === 'Email' || choice === 'Both';
+        var wantPhone = choice === 'Text' || choice === 'Both';
+        emailField.hidden = !wantEmail;
+        phoneField.hidden = !wantPhone;
+        email.required = wantEmail;
+        phone.required = wantPhone;
+        email.disabled = !wantEmail;
+        phone.disabled = !wantPhone;
+        email.enterKeyHint = wantPhone ? 'next' : 'done';
+        if (!wantEmail) email.setCustomValidity('');
+        if (!wantPhone) phone.setCustomValidity('');
+      }
+
+      function showError(message) {
+        formError.hidden = false;
+        formError.textContent = message;
+        formError.focus && formError.setAttribute('tabindex', '-1');
+        formError.focus();
+      }
+
+      function clearError() {
+        formError.hidden = true;
+        formError.textContent = '';
+      }
+
+      select.addEventListener('change', selectedNotes);
+      form.addEventListener('change', function (event) {
+        if (event.target.name === 'remindBy') updateReminderFields();
+      });
+
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        clearError();
+        if (!form.reportValidity()) return;
+        var data = {
+          honeypot: document.getElementById('fax_number').value,
+          saturday: select.value,
+          familyName: document.getElementById('family-name').value,
+          contactName: document.getElementById('contact-name').value,
+          remindBy: form.querySelector('input[name="remindBy"]:checked').value,
+          email: email.value,
+          phone: phone.value,
+        };
+        submitButton.disabled = true;
+        submitButton.textContent = 'Signing up…';
+        form.setAttribute('aria-busy', 'true');
+        google.script.run
+          .withSuccessHandler(function (result) {
+            submitButton.disabled = false;
+            submitButton.textContent = 'Sign up';
+            form.removeAttribute('aria-busy');
+            if (!result || !result.ok) {
+              showError(result && result.error ? result.error : 'That signup could not be saved. Try again.');
+              return;
+            }
+            form.hidden = true;
+            empty.hidden = true;
+            done.hidden = false;
+            doneText.textContent = result.familyName + ' is signed up for ' + result.saturdayLabel + '. ' + result.spotsLeft + ' of ' + result.max + ' spots are still open. A reminder goes out on Friday.';
+            doneTitle.focus();
+          })
+          .withFailureHandler(function () {
+            submitButton.disabled = false;
+            submitButton.textContent = 'Sign up';
+            form.removeAttribute('aria-busy');
+            showError('That signup could not be saved. Check the connection and try again.');
+          })
+          .submitSignup(data);
+      });
+
+      document.getElementById('another').addEventListener('click', function () {
+        done.hidden = true;
+        clearError();
+        form.reset();
+        submitButton.disabled = true;
+        submitButton.textContent = 'Loading…';
+        google.script.run
+          .withSuccessHandler(function (fresh) {
+            document.getElementById('page-data').textContent = JSON.stringify(fresh);
+            loadPage();
+            form.hidden = page.saturdays.filter(function (item) { return !item.full; }).length === 0;
+            submitButton.disabled = false;
+            submitButton.textContent = 'Sign up';
+            document.getElementById('title').focus && document.getElementById('title').setAttribute('tabindex', '-1');
+            document.getElementById('title').focus();
+          })
+          .withFailureHandler(function () {
+            submitButton.disabled = false;
+            submitButton.textContent = 'Sign up';
+            form.hidden = false;
+            showError('The Saturday list could not be refreshed. Reload the page.');
+          })
+          .getPageData();
+      });
+
+      loadPage();
+    })();
+  </script>
+  <noscript>
+    <p>This signup page needs JavaScript. Ask the coordinator if the form does not appear.</p>
+  </noscript>
+</body>
+</html>
