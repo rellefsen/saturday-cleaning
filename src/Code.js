@@ -234,6 +234,8 @@ function buildPageData_() {
   });
   return {
     textingEnabled: settings.textingEnabled,
+    coordinatorName: settings.coordinatorName,
+    helpText: signupHelpLine(settings.coordinatorName),
     saturdays: described,
   };
 }
@@ -372,6 +374,7 @@ function readSettings_() {
   }
   return {
     timezone: String(map.Timezone || TIME_ZONE).trim() || TIME_ZONE,
+    coordinatorName: cleanName(map['Coordinator name']),
     coordinatorEmail: normalizeEmail(map['Coordinator email']),
     minimumFamilies: positiveInt(map['Minimum families'], 2),
     maxFamilies: positiveInt(map['Max families'], 4),

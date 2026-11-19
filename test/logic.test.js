@@ -110,6 +110,23 @@ test('signup validation enforces the cap, the contact method, and duplicates', (
   }, { ...context, todayIso: '2026-11-21' }).error, /no longer open/);
 });
 
+test('signup help line uses the coordinator name and no contact details', () => {
+  assert.equal(
+    logic.signupHelpLine(''),
+    'Need help signing up? Contact the cleaning coordinator. Their contact information is in the LDS Tools app.'
+  );
+  assert.equal(
+    logic.signupHelpLine('   '),
+    'Need help signing up? Contact the cleaning coordinator. Their contact information is in the LDS Tools app.'
+  );
+  assert.equal(
+    logic.signupHelpLine('  Ada Lovelace  '),
+    'Need help signing up? Contact Ada Lovelace. Their contact information is in the LDS Tools app.'
+  );
+  assert.equal(logic.signupHelpLine('Ada Lovelace').includes('the cleaning coordinator'), false);
+  assert.equal(logic.signupHelpLine('Ada Lovelace').includes('@'), false);
+});
+
 test('sheet text neutralizes formula-looking names', () => {
   assert.equal(logic.asSheetText('=CMD()'), "'=CMD()");
   assert.equal(logic.asSheetText('Patel'), 'Patel');

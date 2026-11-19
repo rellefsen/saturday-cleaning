@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
   <title>Saturday cleaning signup</title>
   <style>
     :root {
@@ -193,6 +194,7 @@
   <main>
     <h1 id="title">Saturday cleaning</h1>
     <p class="lede">Saturday morning cleaning. Supplies are at the building. Four families can sign up for each Saturday. A reminder goes out on Friday.</p>
+    <p id="signup-help">Need help signing up? Contact the cleaning coordinator. Their contact information is in the LDS Tools app.</p>
 
     <p id="empty" class="banner" hidden>No Saturdays are open right now.</p>
     <p id="full-list" class="hint"></p>
@@ -415,6 +417,11 @@
         }
         detail.textContent = '';
         textingNote.hidden = page.textingEnabled;
+        document.getElementById('signup-help').textContent = page.helpText
+          ? page.helpText
+          : (page.coordinatorName
+            ? 'Need help signing up? Contact ' + page.coordinatorName + '. Their contact information is in the LDS Tools app.'
+            : 'Need help signing up? Contact the cleaning coordinator. Their contact information is in the LDS Tools app.');
         updateReminderFields();
       }
 

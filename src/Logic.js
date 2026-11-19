@@ -18,6 +18,7 @@ var SIGNUP_HEADERS = ['Saturday', 'Family name', 'Contact name', 'Email', 'Phone
 
 var SETTINGS_DEFAULTS = [
   ['Timezone', TIME_ZONE],
+  ['Coordinator name', ''],
   ['Coordinator email', ''],
   ['Minimum families', '2'],
   ['Max families', '4'],
@@ -27,6 +28,7 @@ var SETTINGS_DEFAULTS = [
 
 var SETTING_NOTES = {
   'Timezone': 'Mountain Time. Leave this as America/Denver so reminders follow daylight saving.',
+  'Coordinator name': 'Shown on the signup page for people who need help. Leave blank to say "the cleaning coordinator." Do not put a phone number or email here. Those stay in the LDS Tools app.',
   'Coordinator email': 'Gets the Thursday note when fewer than the minimum families are signed up. Reminder replies go here too.',
   'Minimum families': 'On Thursday, email the coordinator when the coming Saturday is below this number.',
   'Max families': 'Default cap used when new Saturdays are added. Change one Saturday in its own Max families cell.',
@@ -402,6 +404,14 @@ function followupReason(note) {
   return '';
 }
 
+function signupHelpLine(name) {
+  var cleaned = cleanName(name);
+  if (!cleaned) {
+    return 'Need help signing up? Contact the cleaning coordinator. Their contact information is in the LDS Tools app.';
+  }
+  return 'Need help signing up? Contact ' + cleaned + '. Their contact information is in the LDS Tools app.';
+}
+
 function followupBody(items, saturdayLabel) {
   var lines = [
     'Friday reminders for ' + saturdayLabel + ' need a follow-up.',
@@ -455,6 +465,7 @@ if (typeof module !== 'undefined' && module.exports) {
     smsBody: smsBody,
     reminderChannels: reminderChannels,
     reminderOutcome: reminderOutcome,
+    signupHelpLine: signupHelpLine,
     followupBody: followupBody,
   };
 }

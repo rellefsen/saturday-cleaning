@@ -19,6 +19,8 @@ Open the cleaning page on the Google Site.
 
 The page confirms the Saturday. The reminder goes out on Friday. To cancel, reply to that reminder or tell the coordinator. The coordinator frees the spot by deleting that row on the **Signups** tab.
 
+The form also says who to contact if you need help signing up. That line stays on the page when no Saturday is open. It uses the coordinator’s name from **Settings** when one is entered. Their phone number and email are in the LDS Tools app, not on the form.
+
 Text reminders stay off until texting is turned on in the sheet. Until then, leave an email address if you want the Friday reminder. A text-only signup is sent to the coordinator to follow up by phone.
 
 ## What the coordinator does each week
@@ -43,7 +45,8 @@ Each family is one row: Saturday, family name, contact name, email, phone, and r
 
 ### Settings
 
-- **Coordinator email.** Address that receives the low-signup note. Reminder replies go here too. Fill this in before the Thursday email can send.
+- **Coordinator name.** Shown on the signup page for people who need help signing up. Leave it blank to say “the cleaning coordinator.” Do not put a phone number or email in this cell.
+- **Coordinator email.** Address that receives the low-signup note. Reminder replies go here too. Fill this in before the Thursday email can send. It is not shown on the signup page.
 - **Minimum families.** Default `2`. On Thursday, if the coming Saturday is still open and has fewer families than this, you get one email.
 - **Max families.** Default `4`. Used when new Saturday rows are created.
 - **Weeks ahead.** How many new Saturdays to keep on the schedule.
@@ -82,11 +85,17 @@ A family who signs up after Friday’s job has run does not get that week’s re
 3. Set **Execute as** to **Me** and **Who has access** to **Anyone**.
 4. Deploy and copy the web app URL. It ends in `/exec`.
 5. On the Google Site, choose **Insert → Embed → By URL**, paste that URL, and set the height to about 720 pixels.
-6. Publish the site.
+6. Publish the site so anyone with the link can open it.
 
 Anyone with the site link can submit the form. The script writes to the sheet as you, so visitors cannot open the sheet or see other families’ email addresses and phone numbers.
 
-After you change the script, choose **Deploy → Manage deployments**, edit the web app, and select **New version**. The `/exec` URL stays the same, so the Site embed can keep the same link. Publish the Site again only if you changed the Site page itself.
+After you change the script, choose **Deploy → Manage deployments**, edit the web app, and select **New version**. The `/exec` URL stays the same, so the Site embed can keep the same link. Publish the Site again only if you changed the Site page itself. Redeploy after this noindex change so the signup page serves the updated file.
+
+## Ask search engines not to list it
+
+Publish the Site, then turn on Google’s search opt-out. On a computer, open the site in Google Sites. At the top, next to **Publish**, click the **Down arrow**. Click **Publish settings**. Click **Request public search engines to not display my site**. Click **Save**. Families who have the link can still open the published site.
+
+That setting applies to the Google Site. The signup form is a second address, the Apps Script web app URL on `script.google.com` that ends in `/exec`. That page now includes `<meta name="robots" content="noindex, nofollow">`, which asks crawlers not to index the form. The meta tag does not opt the Google Site itself out of search. Apps Script cannot set an `X-Robots-Tag` header, and you cannot edit `robots.txt` on `script.google.com`. Use the meta tag, and share the Site link rather than the `/exec` URL.
 
 ## First-time sheet setup
 
@@ -99,7 +108,7 @@ After you change the script, choose **Deploy → Manage deployments**, edit the 
    - `Index.html` as `Index.html`
    - `appsscript.json` with the contents of `src/appsscript.json`
 5. Save, reload the spreadsheet, and run **Cleaning → Set up sheet**. Allow the requested permissions.
-6. On **Settings**, enter **Coordinator email**.
+6. On **Settings**, enter **Coordinator name** and **Coordinator email**. The name is the only coordinator detail the signup page shows. Leave the name blank to say “the cleaning coordinator.” People are told that contact information is in the LDS Tools app.
 7. Run **Cleaning → Install reminder schedule**.
 8. Deploy the web app and embed it, using the steps above.
 
