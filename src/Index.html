@@ -257,8 +257,17 @@
       <div class="field" id="phone-field" hidden>
         <label for="phone">Phone</label>
         <span id="phone-hint" class="hint">Include the area code, such as 801-555-0100.</span>
-        <input id="phone" name="phone" type="tel" maxlength="20" autocomplete="tel" inputmode="tel" pattern="\+?[0-9 .()\-]{10,20}" enterkeyhint="done" aria-describedby="phone-hint" data-error="phone-error">
+        <input id="phone" name="phone" type="tel" maxlength="20" autocomplete="tel" inputmode="tel" pattern="\+?[0-9 .()\-]{10,20}" enterkeyhint="next" aria-describedby="phone-hint" data-error="phone-error">
         <div id="phone-error" class="error-msg">Error: Enter a phone number with an area code, such as 801-555-0100.</div>
+      </div>
+
+      <div class="field" id="text-consent-field" hidden>
+        <div class="choice">
+          <input id="text-consent" name="textConsent" type="checkbox" value="yes" aria-describedby="text-consent-hint" data-error="text-consent-error">
+          <label for="text-consent">I agree to receive Meadowcrest Ward Reminders texts at this phone number from (855) 529-5728.</label>
+        </div>
+        <p id="text-consent-hint" class="hint">Meadowcrest Ward Reminders: one reminder text on the Friday before each Saturday you sign up for. Message and data rates may apply. Reply HELP for help or STOP to opt out. For help, contact Don Winegar. His contact information is in the LDS Tools app. Do not call (855) 529-5728. <a href="https://rellefsen.github.io/saturday-cleaning/terms.html" target="_blank" rel="noopener noreferrer">Terms</a>. <a href="https://rellefsen.github.io/saturday-cleaning/privacy.html" target="_blank" rel="noopener noreferrer">Privacy</a>.</p>
+        <div id="text-consent-error" class="error-msg">Error: Confirm that you agree to receive the text reminders.</div>
       </div>
 
       <p id="texting-note" class="hint" hidden>Text reminders start after texting is turned on. Add an email if you want the Friday reminder before then.</p>
@@ -369,6 +378,8 @@
       var phoneField = document.getElementById('phone-field');
       var email = document.getElementById('email');
       var phone = document.getElementById('phone');
+      var textConsentField = document.getElementById('text-consent-field');
+      var textConsent = document.getElementById('text-consent');
       var textingNote = document.getElementById('texting-note');
       var submitButton = form.querySelector('button[type="submit"]');
       var page = { textingEnabled: false, saturdays: [] };
@@ -387,6 +398,12 @@
       setMessage(document.getElementById('contact-name'), 'Error: Enter the contact name.');
       setMessage(email, 'Error: Enter an email address in the format you@example.com.');
       setMessage(phone, 'Error: Enter a phone number with an area code, such as 801-555-0100.');
+      textConsent.addEventListener('invalid', function () {
+        textConsent.setCustomValidity('Error: Confirm that you agree to receive the text reminders.');
+      });
+      textConsent.addEventListener('change', function () {
+        textConsent.setCustomValidity('');
+      });
 
       function loadPage() {
         page = JSON.parse(document.getElementById('page-data').textContent);
@@ -437,13 +454,20 @@
         var wantPhone = choice === 'Text' || choice === 'Both';
         emailField.hidden = !wantEmail;
         phoneField.hidden = !wantPhone;
+        textConsentField.hidden = !wantPhone;
         email.required = wantEmail;
         phone.required = wantPhone;
+        textConsent.required = wantPhone;
         email.disabled = !wantEmail;
         phone.disabled = !wantPhone;
+        textConsent.disabled = !wantPhone;
         email.enterKeyHint = wantPhone ? 'next' : 'done';
         if (!wantEmail) email.setCustomValidity('');
-        if (!wantPhone) phone.setCustomValidity('');
+        if (!wantPhone) {
+          phone.setCustomValidity('');
+          textConsent.checked = false;
+          textConsent.setCustomValidity('');
+        }
       }
 
       function showError(message) {
@@ -475,6 +499,7 @@
           remindBy: form.querySelector('input[name="remindBy"]:checked').value,
           email: email.value,
           phone: phone.value,
+          textConsent: textConsent.checked,
         };
         submitButton.disabled = true;
         submitButton.textContent = 'Signing up…';
@@ -491,7 +516,11 @@
             form.hidden = true;
             empty.hidden = true;
             done.hidden = false;
-            doneText.textContent = result.familyName + ' is signed up for ' + result.saturdayLabel + '. ' + result.spotsLeft + ' of ' + result.max + ' spots are still open. A reminder goes out on Friday.';
+            var confirmation = result.familyName + ' is signed up for ' + result.saturdayLabel + '. ' + result.spotsLeft + ' of ' + result.max + ' spots are still open. A reminder goes out on Friday.';
+            if (data.remindBy === 'Text' || data.remindBy === 'Both') {
+              confirmation += ' Meadowcrest Ward Reminders: You are signed up for Saturday morning cleaning reminders. You will get about one text on the Friday before each Saturday you sign up for. Message and data rates may apply. Reply HELP for help or STOP to opt out.';
+            }
+            doneText.textContent = confirmation;
             doneTitle.focus();
           })
           .withFailureHandler(function () {

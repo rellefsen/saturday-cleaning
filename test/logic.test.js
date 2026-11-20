@@ -62,6 +62,7 @@ test('signup validation enforces the cap, the contact method, and duplicates', (
     remindBy: 'Both',
     email: 'Anita@Example.com',
     phone: '(801) 555-0100',
+    textConsent: true,
   }, context);
   assert.equal(good.ok, true);
   assert.equal(good.value.familyName, 'Patel');
@@ -92,6 +93,14 @@ test('signup validation enforces the cap, the contact method, and duplicates', (
     remindBy: 'Text',
     phone: '555',
   }, context).error, /area code/);
+
+  assert.match(logic.validateSignup({
+    saturday: '2026-11-21',
+    familyName: 'Garcia',
+    contactName: 'Rosa',
+    remindBy: 'Text',
+    phone: '(801) 555-0100',
+  }, context).error, /agree to receive/);
 
   assert.match(logic.validateSignup({
     saturday: '2026-11-21',
