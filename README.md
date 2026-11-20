@@ -19,7 +19,7 @@ Open the cleaning page on the Google Site.
 
 The page confirms the Saturday. The reminder goes out on Friday. To cancel, reply to that reminder or tell the coordinator. The coordinator frees the spot by deleting that row on the **Signups** tab.
 
-The form also says who to contact if you need help signing up. That line stays on the page when no Saturday is open. It uses the coordinator’s name from **Settings** when one is entered. Their phone number and email are in the LDS Tools app, not on the form.
+The form also says who to contact if you need help signing up. That line stays on the page when no Saturday is open. It uses the coordinator’s name from **Settings** when one is entered. His phone number and email are in the LDS Tools app, not on the form.
 
 Text reminders stay off until texting is turned on in the sheet. Until then, leave an email address if you want the Friday reminder. A text-only signup is sent to the coordinator to follow up by phone.
 
@@ -112,9 +112,21 @@ That setting applies to the Google Site. The signup form is a second address, th
 7. Run **Cleaning → Install reminder schedule**.
 8. Deploy the web app and embed it, using the steps above.
 
+## Business website
+
+GitHub Pages publishes the RLE Consulting page from the `docs/` folder:
+
+- https://rellefsen.github.io/saturday-cleaning/
+- Privacy: https://rellefsen.github.io/saturday-cleaning/privacy.html
+- Terms: https://rellefsen.github.io/saturday-cleaning/terms.html
+
+Use that site address on the toll-free registration. The page names RLE Consulting, describes Meadowcrest Ward Reminders, and links to the privacy policy and terms. It does not list the texting number as a phone number to call.
+
+Email for `rleconsulting.com` can stay on Namecheap. To serve this same page at `rleconsulting.com` later, leave the Namecheap `MX` records on `mx1.privateemail.com` and `mx2.privateemail.com`, and point only the website records at GitHub Pages. GitHub’s current addresses are listed in [Managing a custom domain for your GitHub Pages site](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site).
+
 ## Texting
 
-Leave **Texting enabled** as `FALSE` until a texting number is registered for application texting (A2P 10DLC in the United States). Until then, Friday email still goes to anyone who left an email address.
+Leave **Texting enabled** as `FALSE` until the toll-free number is verified. Until then, Friday email still goes to anyone who left an email address.
 
 When the number is ready, open Apps Script **Project Settings → Script properties** and add:
 
