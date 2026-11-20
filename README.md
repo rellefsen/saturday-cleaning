@@ -117,8 +117,11 @@ That setting applies to the Google Site. The signup form is a second address, th
 GitHub Pages publishes the RLE Consulting page from the `docs/` folder:
 
 - https://rellefsen.github.io/saturday-cleaning/
+- Text opt-in proof: https://rellefsen.github.io/saturday-cleaning/opt-in.html
 - Privacy: https://rellefsen.github.io/saturday-cleaning/privacy.html
 - Terms: https://rellefsen.github.io/saturday-cleaning/terms.html
+
+For the toll-free opt-in proof, choose the web form. People do not text a keyword. Put the text opt-in URL in the proof field.
 
 Use that site address on the toll-free registration. The page names RLE Consulting, describes Meadowcrest Ward Reminders, and links to the privacy policy and terms. It does not list the texting number as a phone number to call.
 

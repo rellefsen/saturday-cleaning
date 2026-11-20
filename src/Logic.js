@@ -280,6 +280,9 @@ function validateSignup(input, context) {
     if (!phone) {
       return { ok: false, error: 'Enter a phone number with an area code, such as 801-555-0100.' };
     }
+    if (form.textConsent !== true && String(form.textConsent || '').toLowerCase() !== 'yes') {
+      return { ok: false, error: 'Confirm that you agree to receive the text reminders.' };
+    }
   }
 
   var saturdayIso = canonicalizeIso(form.saturday);
