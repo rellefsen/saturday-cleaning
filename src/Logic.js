@@ -409,7 +409,7 @@ function signupHelpLine(name) {
   if (!cleaned) {
     return 'Need help signing up? Contact the cleaning coordinator. Their contact information is in the LDS Tools app.';
   }
-  return 'Need help signing up? Contact ' + cleaned + '. Their contact information is in the LDS Tools app.';
+  return 'Need help signing up? Contact ' + cleaned + '. His contact information is in the LDS Tools app.';
 }
 
 function followupBody(items, saturdayLabel) {

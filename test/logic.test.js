@@ -120,11 +120,11 @@ test('signup help line uses the coordinator name and no contact details', () => 
     'Need help signing up? Contact the cleaning coordinator. Their contact information is in the LDS Tools app.'
   );
   assert.equal(
-    logic.signupHelpLine('  Ada Lovelace  '),
-    'Need help signing up? Contact Ada Lovelace. Their contact information is in the LDS Tools app.'
+    logic.signupHelpLine('  Don Winegar  '),
+    'Need help signing up? Contact Don Winegar. His contact information is in the LDS Tools app.'
   );
-  assert.equal(logic.signupHelpLine('Ada Lovelace').includes('the cleaning coordinator'), false);
-  assert.equal(logic.signupHelpLine('Ada Lovelace').includes('@'), false);
+  assert.equal(logic.signupHelpLine('Don Winegar').includes('the cleaning coordinator'), false);
+  assert.equal(logic.signupHelpLine('Don Winegar').includes('@'), false);
 });
 
 test('sheet text neutralizes formula-looking names', () => {
